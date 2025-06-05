@@ -102,6 +102,7 @@ class PetOrgFetcher(private val context: Context) {
                     ?: ""
 
                 val picturePath = downloadImage(context, url)
+
                 val address = it.address.address1
                     ?.takeIf { it.isNotBlank() }
                     ?: it.address.address2
@@ -114,6 +115,7 @@ class PetOrgFetcher(private val context: Context) {
                     put(Organization::phone.name, it.phone)
                     put(Organization::address.name, address)
                     put(Organization::state.name, it.address.state)
+                    put(Organization::city.name, it.address.city)
                     put(Organization::postcode.name, it.address.postcode)
                     put(Organization::country.name, it.address.country)
                     put(Organization::photoPath.name, picturePath ?: "")

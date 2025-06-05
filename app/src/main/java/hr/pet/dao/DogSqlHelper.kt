@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import hr.pet.model.Dog
 
 private const val DB_NAME    = "pets.db"
-private const val DB_VERSION = 1
+private const val DB_VERSION = 2
 private const val TABLE_DOG = "dogs"
 
 private val CREATE_TABLE = "create table $TABLE_DOG( " +

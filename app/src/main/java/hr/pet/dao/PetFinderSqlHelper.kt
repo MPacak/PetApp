@@ -33,6 +33,7 @@ private val CREATE_ORG_TABLE = "create table $TABLE_ORGS( " +
         "${Organization::phone.name} text, " +
         "${Organization::address.name} text not null, " +
         "${Organization::state.name} text not null, " +
+        "${Organization::city.name} text not null, " +
         "${Organization::postcode.name} text not null, " +
         "${Organization::country.name} text not null, " +
         "${Organization::photoPath.name} text not null" +

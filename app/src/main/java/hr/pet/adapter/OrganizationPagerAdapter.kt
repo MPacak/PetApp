@@ -7,6 +7,7 @@ import android.content.Intent
 import android.location.Address
 import android.location.Geocoder
 import android.net.Uri
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import androidx.lifecycle.Lifecycle
@@ -33,7 +34,6 @@ import java.util.Locale
 import java.util.concurrent.Executors
 
 
-//FINISH ACTIVITIY!!!
 class OrganizationPagerAdapter (
     private val context: Context,
     private val organizations: List<Organization>,
@@ -87,6 +87,7 @@ class OrganizationPagerAdapter (
             }
 
             val fullAddress = buildFullAddress(org)
+
             if (fullAddress.isNotBlank()) {
                 tvOrgAddress.visibility = View.VISIBLE
                 tvOrgAddress.text = fullAddress
@@ -113,9 +114,11 @@ class OrganizationPagerAdapter (
             val parts = mutableListOf<String>()
             org.address?.takeIf { it.isNotBlank() }?.let { parts.add(it) }
             // state + postcode
+
+            parts.add(org.city)
             val stateZip = listOf(org.state, org.postcode).joinToString(" ").trim()
             if (stateZip.isNotBlank()) parts.add(stateZip)
-            parts.add(org.country)      // country is non-null in your data class
+            parts.add(org.country)
             return parts.joinToString(", ")
         }
 
@@ -134,14 +137,16 @@ class OrganizationPagerAdapter (
                 //    For simplicity, use Android’s Geocoder (requires INTERNET permission).
                 val geocoder = Geocoder(context, Locale.getDefault())
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    Log.d("OrgPagerAdapter", "Geocoding first")
                     geocoder.getFromLocationName(
                         fullAddress,
                         /* maxResults = */ 1,
-                        /* executor = */
+                        ContextCompat.getMainExecutor(context),
                         /* listener = */ object : Geocoder.GeocodeListener{
                             override fun onGeocode(addresses: MutableList<Address>) {
                                 if (addresses.isNotEmpty()) {
                                     val addr = addresses[0]
+                                    Log.d("OrgPagerAdapter", "Geocoding first: '$addr'")
                                     val latLng = LatLng(addr.latitude, addr.longitude)
 
                                     map.clear()
@@ -161,6 +166,7 @@ class OrganizationPagerAdapter (
                 }
                 // 5) Fallback for older Android versions: do geocoding on a background thread
                 else {
+                    Log.d("OrgPagerAdapter", "Geocoding second")
                     @Suppress("DEPRECATION")
                     Executors.newSingleThreadExecutor().execute {
                         val addresses: List<Address>? = try {
@@ -168,11 +174,13 @@ class OrganizationPagerAdapter (
                         } catch (e: IOException) {
                             null
                         }
+                        Log.d("OrgPagerAdapter", "Fallback geocoder result size = ${addresses?.size ?: 0} for '$fullAddress'")
 
                         if (!addresses.isNullOrEmpty()) {
                             val addr = addresses[0]
+                            Log.d("OrgPagerAdapter", "Geocoding second: '$addr'")
                             val latLng = LatLng(addr.latitude, addr.longitude)
-
+                            Log.d("OrgPagerAdapter", "Fallback geocoder first result → ${addr.latitude},${addr.longitude}")
                             // Switch back to the main thread to update the map UI
                             (context as Activity).runOnUiThread {
                                 map.clear()
@@ -185,6 +193,10 @@ class OrganizationPagerAdapter (
                                     CameraUpdateFactory.newLatLngZoom(latLng, 14f)
                                 )
                             }
+                        }else {
+                            // NEW: This case happens when geocoder.getFromLocationName(...) returned nothing
+                            Log.w("OrgPagerAdapter", "Fallback geocoder returned NO results for '$fullAddress'")
+                            // You could optionally move the camera to some default zoom here, or leave it at (0,0)
                         }
                     }
                 }

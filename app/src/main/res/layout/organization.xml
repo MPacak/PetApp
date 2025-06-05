@@ -38,12 +38,16 @@
                 android:id="@+id/tvOrgName"
                 style="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:textColor="?attr/colorOnSurface"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                  />
 
             <TextView
                 android:id="@+id/tvOrgLocation"
                 style="@style/TextAppearance.MaterialComponents.Body2"
                 android:textColor="?attr/colorOnSurfaceVariant"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                  />
 
         </LinearLayout>

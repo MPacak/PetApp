@@ -7,5 +7,5 @@
     <item
         android:id="@+id/menuOrganization"
         android:icon="@mipmap/ic_org_menu"
-        android:title="@string/org_photo" />
+        android:title="@string/orglabel" />
 </menu>

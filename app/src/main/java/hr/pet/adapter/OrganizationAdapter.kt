@@ -35,7 +35,7 @@ class OrganizationAdapter  (private val context: Context,
             tvOrgLocation.text = org.address ?: org.state
             Picasso.get()
                 .load(File(org.photoPath))
-                .error(R.drawable.nopicture)
+                .error(R.mipmap.nopicture)
                 .fit()
                 .centerCrop()
                 .transform(RoundedCornersTransformation(50, 5))

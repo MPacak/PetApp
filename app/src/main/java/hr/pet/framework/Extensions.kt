@@ -125,6 +125,7 @@ fun Context.fetchOrganizations(): MutableList<Organization> {
                 phone      = c.getString(c.getColumnIndex(Organization::phone.name)),
                 address    = c.getString(c.getColumnIndex(Organization::address.name)),
                 state      = c.getString(c.getColumnIndex(Organization::state.name)),
+                city = c.getString(c.getColumnIndex(Organization::city.name)),
                 postcode   = c.getString(c.getColumnIndex(Organization::postcode.name)),
                 country    = c.getString(c.getColumnIndex(Organization::country.name)),
                 photoPath  = c.getString(c.getColumnIndex(Organization::photoPath.name))

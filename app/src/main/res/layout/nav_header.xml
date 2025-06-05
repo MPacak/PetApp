@@ -3,6 +3,6 @@
     android:layout_width="@dimen/_150dp"
     android:layout_height="@dimen/_200dp"
     android:layout_marginTop="@dimen/_20dp"
-    android:src="@drawable/dog">
+    android:src="@mipmap/dog">
 
 </ImageView>

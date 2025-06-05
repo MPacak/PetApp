@@ -7,6 +7,7 @@ data class Organization(
     val phone: String?,
     val address: String?,
     val state: String,
+    val city: String,
     val postcode: String,
     val country: String,
     val photoPath: String

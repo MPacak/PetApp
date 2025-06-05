@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import hr.pet.model.Organization
 
 private const val DB_NAME    = "pets.db"
-private const val DB_VERSION = 1
+private const val DB_VERSION = 2
 private const val TABLE_ORG = "organizations"
 
 private val CREATE_ORG_TABLE = "create table $TABLE_ORG( " +
@@ -18,6 +18,7 @@ private val CREATE_ORG_TABLE = "create table $TABLE_ORG( " +
         "${Organization::phone.name} text, " +
         "${Organization::address.name} text not null, " +
         "${Organization::state.name} text not null, " +
+        "${Organization::city.name} text not null, " +
         "${Organization::postcode.name} text not null, " +
         "${Organization::country.name} text not null, " +
         "${Organization::photoPath.name} text not null" +

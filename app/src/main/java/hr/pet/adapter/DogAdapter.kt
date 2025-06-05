@@ -32,7 +32,7 @@ private val dogs: MutableList<Dog>)
         tvDogInfo.text = dog.description
         Picasso.get()
             .load(File(dog.picturePath))
-            .error(R.drawable.nopicture)
+            .error(R.mipmap.nopicture)
             .fit()
             .centerCrop()
             .transform(RoundedCornersTransformation(50, 5))
