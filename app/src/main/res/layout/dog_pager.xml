@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <!-- Vertical container for everything on one “dog” page -->
+    <LinearLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- 1) Large header image at the top -->
+        <ImageView
+            android:id="@+id/ivDogPhoto"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+
+            android:contentDescription="@string/dog_phot" />
+
+        <!-- 2) Dog name -->
+        <TextView
+            android:id="@+id/tvDogName"
+            style="@style/TextAppearance.MaterialComponents.Headline5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" />
+
+        <!-- 3) Primary breed (and “Mixed” badge) -->
+        <LinearLayout
+            android:id="@+id/breedRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="4dp"
+            android:gravity="center_vertical">
+
+            <!-- Breed text -->
+            <TextView
+                android:id="@+id/tvBreedPrimary"
+                style="@style/TextAppearance.MaterialComponents.Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <!-- If breedMixed == true, show a little “Mixed” chip/badge -->
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipMixed"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                app:chipStrokeColor="?attr/colorSecondary"
+                app:chipStrokeWidth="1dp"
+                android:visibility="gone" />  <!-- start GONE if not mixed -->
+        </LinearLayout>
+
+        <!-- 4) Row of small “attribute chips”: age, gender, size, coat -->
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupAttrs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            app:singleLine="true"
+            app:chipSpacing="8dp"
+            android:rowCount="1">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipAge"
+                style="@style/Widget.MaterialComponents.Chip.Action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Age" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipGender"
+                style="@style/Widget.MaterialComponents.Chip.Action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gender" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipSize"
+                style="@style/Widget.MaterialComponents.Chip.Action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Size" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipCoat"
+                style="@style/Widget.MaterialComponents.Chip.Action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Coat" />
+
+        </com.google.android.material.chip.ChipGroup>
+
+        <!-- 5) Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?attr/colorOnSurface"
+            android:layout_marginTop="16dp" />
+
+        <!-- 6) Description section -->
+        <TextView
+            android:id="@+id/tvDescription"
+            style="@style/TextAppearance.MaterialComponents.Body2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Description goes here..."
+            android:lineSpacingExtra="4dp" />
+
+        <!-- 7) Color swatches (if available) -->
+        <LinearLayout
+            android:id="@+id/colorSwatchesRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="24dp"
+            android:gravity="center_vertical">
+
+            <!-- Primary color circle  android:background="@drawable/circle_shape"-->
+            <TextView
+                android:id="@+id/viewColorPrimary"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginEnd="16dp"
+
+                android:visibility="gone" />  <!-- gone by default if null -->
+
+            <!-- Secondary color circle  android:background="@drawable/circle_shape" -->
+            <TextView
+                android:id="@+id/viewColorSecondary"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginEnd="16dp"
+
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

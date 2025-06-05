@@ -62,6 +62,10 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.retrofit2.converter.gson)
 
+//widgets
+    implementation(libs.google.material)
+    implementation(libs.play.services.maps)
+    implementation(libs.androidx.lifecycle.common.jvm)
 
 
     testImplementation(libs.junit)

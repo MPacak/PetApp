@@ -3,4 +3,15 @@
     <string name="waiting">waiting</string>
     <string name="loading">loading</string>
     <string name="test">test</string>
+    <string name="dog_phot">Dog photo</string>
+    <string name="org_photo">Organization photo</string>
+    <string name="delete">delete</string>
+    <string name="sure_to_delete">Are you surely?</string>
+    <string name="sure_to_exit">Are you surely?</string>
+    <string name="cancel">Not surely</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="orglabel">Organizations</string>
+    <string name="dog_label">Dogs to adopt</string>
+    <string name="exit">Back</string>
 </resources>

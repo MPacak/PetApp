@@ -9,9 +9,9 @@ import hr.pet.model.Organization
 
 private const val DB_NAME    = "pets.db"
 private const val DB_VERSION = 1
-private const val TABLE_ORGS = "organizations"
+private const val TABLE_ORG = "organizations"
 
-private val CREATE_ORG_TABLE = "create table $TABLE_ORGS( " +
+private val CREATE_ORG_TABLE = "create table $TABLE_ORG( " +
         "${Organization::id.name} integer primary key autoincrement, " +
         "${Organization::name.name} text not null, " +
         "${Organization::email.name} text, " +
@@ -23,7 +23,7 @@ private val CREATE_ORG_TABLE = "create table $TABLE_ORGS( " +
         "${Organization::photoPath.name} text not null" +
         ")"
 
-private const val DROP_ORG_TABLE = "drop table if exists $TABLE_ORGS"
+private const val DROP_ORG_TABLE = "drop table if exists $TABLE_ORG"
 class OrganizationSqlHelper(context: Context?) : SQLiteOpenHelper(
     context,
     DB_NAME,
@@ -46,7 +46,7 @@ class OrganizationSqlHelper(context: Context?) : SQLiteOpenHelper(
         selectionArgs: Array<String>?,
         sortOrder: String?
     ): Cursor = readableDatabase.query(
-        TABLE_ORGS,
+        TABLE_ORG,
         projection,
         selection,
         selectionArgs,
@@ -56,7 +56,7 @@ class OrganizationSqlHelper(context: Context?) : SQLiteOpenHelper(
     )
 
     override fun insert(values: ContentValues?): Long = writableDatabase.insert(
-        TABLE_ORGS,
+        TABLE_ORG,
         null,
         values
     )
@@ -66,7 +66,7 @@ class OrganizationSqlHelper(context: Context?) : SQLiteOpenHelper(
         selection: String?,
         selectionArgs: Array<String>?
     ): Int = writableDatabase.update(
-        TABLE_ORGS,
+        TABLE_ORG,
         values,
         selection,
         selectionArgs
@@ -76,7 +76,7 @@ class OrganizationSqlHelper(context: Context?) : SQLiteOpenHelper(
         selection: String?,
         selectionArgs: Array<String>?
     ): Int = writableDatabase.delete(
-        TABLE_ORGS,
+        TABLE_ORG,
         selection,
         selectionArgs
     )

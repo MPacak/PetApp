@@ -16,6 +16,28 @@
         android:theme="@style/Theme.PetFinder"
         tools:targetApi="31">
         <activity
+            android:name=".OrgPagerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DogPagerActivity"
+            android:exported="false" />
+
+        <receiver
+            android:name=".PetFinderReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="hr.pet.ACTION_INITIAL_FETCH_DONE" />
+            </intent-filter>
+        </receiver>
+
+        <provider
+            android:name=".PetProvider"
+            android:authorities="hr.pet.provider"
+            android:enabled="true"
+            android:exported="false" />
+
+        <activity
             android:name=".SplashActivity"
             android:exported="true">
             <intent-filter>

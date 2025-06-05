@@ -1,11 +1,11 @@
 package hr.pet.model
 
 data class Organization(
-    val id: Int,
+    val id: Long,
     val name: String,
     val email: String?,
     val phone: String?,
-    val address: String,
+    val address: String?,
     val state: String,
     val postcode: String,
     val country: String,

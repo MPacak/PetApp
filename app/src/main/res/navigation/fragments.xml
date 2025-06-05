@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/menuDogs"
+    android:id="@+id/fragments">
+    <fragment
+        android:id="@+id/menuDogs"
+        android:name="hr.pet.fragment.DogFragment"
+        android:label="@string/dog_label"
+        tools:layout="@layout/fragment_dog" />
+
+    <fragment
+        android:id="@+id/menuOrganization"
+        android:name="hr.pet.fragment.OrgFragment"
+        android:label="@string/orglabel"
+        tools:layout="@layout/fragment_org" />
+</navigation>

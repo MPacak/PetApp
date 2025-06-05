@@ -9,9 +9,9 @@ import hr.pet.model.Dog
 
 private const val DB_NAME    = "pets.db"
 private const val DB_VERSION = 1
-private const val TABLE_DOGS = "dogs"
+private const val TABLE_DOG = "dogs"
 
-private val CREATE_TABLE = "create table $TABLE_DOGS( " +
+private val CREATE_TABLE = "create table $TABLE_DOG( " +
         "${Dog::id.name} integer primary key autoincrement, " +
         "${Dog::breedPrimary.name} text not null, " +
         "${Dog::breedMixed.name} integer not null, " +
@@ -20,14 +20,13 @@ private val CREATE_TABLE = "create table $TABLE_DOGS( " +
         "${Dog::size.name} text not null, " +
         "${Dog::coat.name} text not null, " +
         "${Dog::name.name} text not null, " +
-        "${Dog::description.name} text not null" +
+        "${Dog::description.name} text, " +
         "${Dog::colorPrimary.name} text, " +
         "${Dog::colorSecondary.name} text, " +
-        "${Dog::picturePath.name} text not null, " +
-
+        "${Dog::picturePath.name} text not null " +
         ")"
 
-private const val DROP_DOG_TABLE = "DROP TABLE IF EXISTS $TABLE_DOGS"
+private const val DROP_DOG_TABLE = "DROP TABLE IF EXISTS $TABLE_DOG"
 class DogSqlHelper(context: Context?) : SQLiteOpenHelper(
     context,
     DB_NAME,
@@ -51,7 +50,7 @@ class DogSqlHelper(context: Context?) : SQLiteOpenHelper(
         selectionArgs: Array<String>?,
         sortOrder: String?
     ): Cursor = readableDatabase.query(
-        TABLE_DOGS,
+        TABLE_DOG,
         projection,
         selection,
         selectionArgs,
@@ -61,7 +60,7 @@ class DogSqlHelper(context: Context?) : SQLiteOpenHelper(
     )
 
     override fun insert(values: ContentValues?): Long = writableDatabase.insert(
-        TABLE_DOGS,
+        TABLE_DOG,
         null,
         values
     )
@@ -71,7 +70,7 @@ class DogSqlHelper(context: Context?) : SQLiteOpenHelper(
         selection: String?,
         selectionArgs: Array<String>?
     ): Int = writableDatabase.update(
-        TABLE_DOGS,
+        TABLE_DOG,
         values,
         selection,
         selectionArgs
@@ -81,7 +80,7 @@ class DogSqlHelper(context: Context?) : SQLiteOpenHelper(
         selection: String?,
         selectionArgs: Array<String>?
     ): Int = writableDatabase.delete(
-        TABLE_DOGS,
+        TABLE_DOG,
         selection,
         selectionArgs
     )

@@ -17,6 +17,9 @@ retrofit = "2.9.0"
 workRuntimeKtx = "2.8.1"
 converterGson = "2.9.0"
 picassoTransformations = "2.4.0"
+materialVersion = "1.8.0"
+playServicesMaps = "19.2.0"
+lifecycleCommonJvm = "2.9.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -37,6 +40,9 @@ picasso = { module = "com.squareup.picasso:picasso", version.ref = "picasso" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 retrofit2-converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "converterGson" }
 picasso-transformations = { group = "jp.wasabeef", name = "picasso-transformations", version.ref = "picassoTransformations" }
+google-material = { group = "com.google.android.material", name = "material", version.ref = "materialVersion" }
+play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
+androidx-lifecycle-common-jvm = { group = "androidx.lifecycle", name = "lifecycle-common-jvm", version.ref = "lifecycleCommonJvm" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
