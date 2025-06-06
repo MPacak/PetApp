@@ -43,7 +43,6 @@ inline fun<reified T: BroadcastReceiver> Context.sendBroadcast() {
 }
 inline fun<reified T: BroadcastReceiver> Context.sendBroadcast(intent : Intent) {
     val explicit = Intent(intent).apply {
-        // this sets the RECEIVER component to your BroadcastReceiver subclass
         setClass(this@sendBroadcast, T::class.java)
     }
     sendBroadcast(explicit)
@@ -100,7 +99,8 @@ fun Context.fetchDogs(): MutableList<Dog> {
                     description   = cursor.getString(cursor.getColumnIndex(Dog::description.name)),
                     colorPrimary  = cursor.getString(cursor.getColumnIndex(Dog::colorPrimary.name)),
                     colorSecondary = cursor.getString(cursor.getColumnIndex(Dog::colorSecondary.name)),
-                    picturePath   = cursor.getString(cursor.getColumnIndex(Dog::picturePath.name))
+                    picturePath   = cursor.getString(cursor.getColumnIndex(Dog::picturePath.name)),
+                    likeDog = cursor.getInt(cursor.getColumnIndex(Dog::likeDog.name)) == 1
                 )
             )
         }
@@ -120,6 +120,7 @@ fun Context.fetchOrganizations(): MutableList<Organization> {
         while (c.moveToNext()) {
             orgs.add(Organization(
                 id         = c.getLong(c.getColumnIndex(Organization::id.name)),
+                officialId = c.getInt(c.getColumnIndex(Organization::officialId.name)),
                 name       = c.getString(c.getColumnIndex(Organization::name.name)),
                 email      = c.getString(c.getColumnIndex(Organization::email.name)),
                 phone      = c.getString(c.getColumnIndex(Organization::phone.name)),

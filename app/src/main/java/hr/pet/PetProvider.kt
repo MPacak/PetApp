@@ -46,7 +46,6 @@ class PetProvider : ContentProvider() {
             )
             else -> throw IllegalArgumentException("Unknown URI: $uri")
         }
-        //  if (count > 0) context?.contentResolver?.notifyChange(uri, null)
         return count
     }
 
@@ -97,17 +96,16 @@ class PetProvider : ContentProvider() {
         val count = when (URI_MATCHER.match(uri)) {
             DOGS, DOG_ID -> dogRepo.update(
                 values,
-                if (URI_MATCHER.match(uri) == DOG_ID) "${Dog::id}=?" else selection,
+                if (URI_MATCHER.match(uri) == DOG_ID) "${Dog::id.name}=?" else selection,
                 selectionArgs
             )
             ORGS, ORG_ID -> orgRepo.update(
                 values,
-                if (URI_MATCHER.match(uri) == ORG_ID) "${Organization::id}=?" else selection,
+                if (URI_MATCHER.match(uri) == ORG_ID) "${Organization::id.name}=?" else selection,
                 selectionArgs
             )
             else -> throw IllegalArgumentException("Unknown URI: $uri")
         }
-        // if (count > 0) context?.contentResolver?.notifyChange(uri, null)
         return count
     }
 }

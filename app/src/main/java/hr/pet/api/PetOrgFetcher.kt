@@ -110,6 +110,7 @@ class PetOrgFetcher(private val context: Context) {
                     ?: ""
 
                 val values = ContentValues().apply {
+                    put(Organization::officialId.name, it.id)
                     put(Organization::name.name, it.name)
                     put(Organization::email.name, it.email)
                     put(Organization::phone.name, it.phone)
@@ -119,6 +120,7 @@ class PetOrgFetcher(private val context: Context) {
                     put(Organization::postcode.name, it.address.postcode)
                     put(Organization::country.name, it.address.country)
                     put(Organization::photoPath.name, picturePath ?: "")
+
                 }
                 context.contentResolver.insert(
                     ORGS_CONTENT_URI,
@@ -152,6 +154,7 @@ class PetOrgFetcher(private val context: Context) {
                     put(Dog::colorPrimary.name, it.colors.primary ?: "")
                     put(Dog::colorSecondary.name, it.colors.secondary ?: "")
                     put(Dog::picturePath.name, picturePath ?: "")
+                    put(Dog::likeDog.name, false)
                 }
                 context.contentResolver.insert(
                     DOGS_CONTENT_URI,
@@ -172,6 +175,5 @@ class PetOrgFetcher(private val context: Context) {
             context.sendBroadcast<PetFinderReceiver>(Intent(ACTION_INITIAL_FETCH_DONE))
         }
     }
-    // context.sendBroadcast(Intent(ACTION_INITIAL_FETCH_DONE))
-    // context.sendBroadcast<PetFinderReceiver>(Intent(ACTION_INITIAL_FETCH_DONE))
+
 }

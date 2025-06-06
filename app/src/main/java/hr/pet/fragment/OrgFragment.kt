@@ -27,7 +27,6 @@ class OrgFragment : Fragment() {
     ): View? {
         orgs = requireContext().fetchOrganizations()
         binding = FragmentOrgBinding.inflate(inflater, container, false)
-        // Inflate the layout for this fragment
         return binding.root
     }
 

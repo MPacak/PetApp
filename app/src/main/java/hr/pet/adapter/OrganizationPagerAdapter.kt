@@ -2,8 +2,6 @@ package hr.pet.adapter
 
 import android.app.Activity
 import android.os.Build
-import android.content.Context
-import android.content.Intent
 import android.location.Address
 import android.location.Geocoder
 import android.net.Uri
@@ -30,14 +28,14 @@ import java.io.File
 import java.io.IOException
 import java.util.Locale
 import java.util.concurrent.Executors
-
+//za map permission samo ako hocu i svoju lokacij uvidit u suprotnom ne treba
 class OrganizationPagerAdapter(
     private val context: FragmentActivity,
     private val organizations: List<Organization>
 ) : RecyclerView.Adapter<OrganizationPagerAdapter.ViewHolder>() {
 
     inner class ViewHolder(orgView: View) : RecyclerView.ViewHolder(orgView) {
-        // 1) Your other views
+
         val ivOrgPhoto   = orgView.findViewById<ImageView>(R.id.ivOrgPhoto)
         val tvOrgName    = orgView.findViewById<TextView>(R.id.tvOrgName)
         val tvOrgEmail   = orgView.findViewById<TextView>(R.id.tvOrgEmail)
@@ -46,20 +44,17 @@ class OrganizationPagerAdapter(
         val mapContainer = orgView.findViewById<FrameLayout>(R.id.mapContainer)
         val btnOpenMaps  = orgView.findViewById<MaterialButton>(R.id.btnOpenMaps)
 
-        // 2) We keep a reference to GoogleMap so we can drop a marker once ready
         var googleMap: GoogleMap? = null
 
-        // 3) If geocoding finishes before the map is “ready,” stash lat/lng here
         var pendingLatLng: LatLng? = null
         var pendingTitle: String? = null
 
-        // 4) We remember the “bind‐time” data so we can attach the fragment later in onViewAttachedToWindow
         var bindPosition: Int = -1
         var bindAddress: String = ""
         var bindTitle: String = ""
 
         fun bind(org: Organization, position: Int) {
-            // A) Bind your image/text/email/phone/address exactly as before
+
             Picasso.get()
                 .load(File(org.photoPath))
                 .error(R.drawable.nopicture)
@@ -92,18 +87,16 @@ class OrganizationPagerAdapter(
                 btnOpenMaps.visibility = View.GONE
             }
 
-            // B) Record the data needed for “attaching” in onViewAttachedToWindow
             bindPosition = position
             bindAddress = fullAddress
             bindTitle = org.name
 
-            // IMPORTANT: Do NOT perform fragment transactions here anymore!
-            // We will do them in onViewAttachedToWindow, where mapContainer is guaranteed to exist.
+
         }
 
-        /** Called when the ViewHolder’s view is attached to the window hierarchy. */
+
         fun onViewAttached() {
-            // If bindPosition < 0, it means bind() hasn’t been called yet, so skip.
+
             if (bindPosition < 0) return
             Log.w("OrgPagerAdapter", "I am going to start the fragment again from on view attached")
             initOrAttachMapFragment(bindPosition, bindAddress, bindTitle)
@@ -117,7 +110,6 @@ class OrganizationPagerAdapter(
             if (existingFrag != null) {
                 Log.d("OrgPagerAdapter", "Re-using existing fragment for tag=$fragmentTag")
 
-                // Replace (re-parent) the existing fragment into the current mapContainer
                 fm.beginTransaction()
                     .replace(mapContainer.id, existingFrag, fragmentTag)
                     .commitAllowingStateLoss()
@@ -244,11 +236,6 @@ class OrganizationPagerAdapter(
 
     override fun getItemCount(): Int = organizations.size
 
-    /**
-     * This is the critical change: when a ViewHolder’s view is attached to the window,
-     * we know that `mapContainer` is now part of the Activity’s view hierarchy.
-     * Therefore we can safely do fragment transactions that target mapContainer.id.
-     */
     override fun onViewAttachedToWindow(holder: ViewHolder) {
         super.onViewAttachedToWindow(holder)
         holder.onViewAttached()

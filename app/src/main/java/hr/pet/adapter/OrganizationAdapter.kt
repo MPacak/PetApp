@@ -10,14 +10,11 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
-import hr.pet.DOGS_CONTENT_URI
 import hr.pet.ORGS_CONTENT_URI
 import hr.pet.ORG_POSITION
-
 import hr.pet.OrgPagerActivity
 import hr.pet.R
 import hr.pet.framework.startActivity
-import hr.pet.model.Dog
 import hr.pet.model.Organization
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
 import java.io.File

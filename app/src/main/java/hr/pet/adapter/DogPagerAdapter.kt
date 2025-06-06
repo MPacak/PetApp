@@ -1,6 +1,8 @@
 package hr.pet.adapter
 
 
+import android.content.ContentUris
+import android.content.ContentValues
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +12,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import com.squareup.picasso.Picasso
+import hr.pet.DOGS_CONTENT_URI
 import hr.pet.R
 import hr.pet.model.Dog
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
@@ -31,6 +34,7 @@ class DogPagerAdapter(
         private val tvDescription     = dogView.findViewById<TextView>(R.id.tvDescription)
         private val chipColorPrimary  = dogView.findViewById<Chip>(R.id.chipColorPrimary)
         private val chipColorSecondary= dogView.findViewById<Chip>(R.id.chipColorSecondary)
+        val ivLike = dogView.findViewById<ImageView>(R.id.ivHeart)
 
         fun bind(dog: Dog) {
             tvDogName.text      = dog.name
@@ -47,8 +51,10 @@ class DogPagerAdapter(
             chipGender.text = dog.gender
             chipSize.text   = dog.size
             tvDescription.text = dog.description
+            ivLike.setImageResource(
+                if(dog.likeDog) R.drawable.fullheart else R.drawable.emptyheart
+            )
 
-            // Show raw colorPrimary string if present
             if (dog.coat.isNotBlank()) {
                 chipCoat.visibility = View.VISIBLE
                 chipCoat.text = dog.coat
@@ -88,27 +94,25 @@ class DogPagerAdapter(
        return dogs.size
     }
 
-    //ovdje definiramo sto se dogodi kad kliknemo na zastavicu oznacenu s id ivread
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-//       holder.ivRead.setOnClickListener {
-//            updateDog(position)
-//        }
+       holder.ivLike.setOnClickListener {
+            updateDog(position)
+        }
         holder.bind(dogs[position])
     }
 
-//    private fun updateDog(position: Int) {
-//        val dog = dogs[position]
-//        dog.read = !dog.read
-//        //update trazi i values, dajemo mu kljuc i value.
-//        //u content values zato dodajemo ime atributa read kao key i stavljamo actual value
-//        context.contentResolver.update(
-//            ContentUris.withAppendedId(NASA_PROVIDER_CONTENT_URI, dog._id!!),
-//            ContentValues().apply {
-//                put(Dog::read.name, dog.read)
-//            },
-//            null,
-//            null
-//        )
-//        notifyDogChanged(position)
-//    }
+    private fun updateDog(position: Int) {
+        val dog = dogs[position]
+        dog.likeDog = !dog.likeDog
+
+        context.contentResolver.update(
+            ContentUris.withAppendedId(DOGS_CONTENT_URI, dog.id),
+            ContentValues().apply {
+                put(Dog::likeDog.name, dog.likeDog)
+            },
+            null,
+            null
+        )
+        notifyItemChanged(position)
+    }
 }

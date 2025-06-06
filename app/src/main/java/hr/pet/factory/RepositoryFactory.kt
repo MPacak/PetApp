@@ -7,8 +7,6 @@ import hr.pet.dao.OrganizationRepository
 import hr.pet.dao.OrganizationRepositoryImpl
 import hr.pet.dao.PetFinderSqlHelper
 
-//fun getDogRepository(context: Context?) = DogSqlHelper(context)
-//fun getOrgRepository(context: Context?) = OrganizationSqlHelper(context)
 
 private fun getDbHelper(ctx: Context): PetFinderSqlHelper =
     PetFinderSqlHelper(ctx.applicationContext)

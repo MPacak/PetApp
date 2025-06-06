@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:fillViewport="true">
 
-    <!-- Vertical container for everything on one “dog” page -->
     <LinearLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
@@ -14,52 +13,74 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- 1) Large header image at the top -->
         <ImageView
             android:id="@+id/ivDogPhoto"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:scaleType="centerCrop"
-
             android:contentDescription="@string/dog_phot" />
 
-        <!-- 2) Dog name -->
-        <TextView
-            android:id="@+id/tvDogName"
-            style="@style/TextAppearance.MaterialComponents.Headline5"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/headerContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp" />
+            android:layout_marginTop="12dp"
+            >
 
-        <!-- 3) Primary breed (and “Mixed” badge) -->
-        <LinearLayout
-            android:id="@+id/breedRow"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="4dp"
-            android:gravity="center_vertical">
-
-            <!-- Breed text -->
             <TextView
-                android:id="@+id/tvBreedPrimary"
-                style="@style/TextAppearance.MaterialComponents.Body1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <!-- If breedMixed == true, show a little “Mixed” chip/badge -->
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipMixed"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
+                android:id="@+id/tvDogName"
+                style="@style/TextAppearance.MaterialComponents.Headline5"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                app:chipStrokeColor="?attr/colorSecondary"
-                app:chipStrokeWidth="1dp"
-                android:visibility="gone" />
-        </LinearLayout>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/ivHeart"
+                android:layout_marginEnd="8dp"
+                />
 
-        <!-- 4) Row of small “attribute chips”: age, gender, size, coat -->
+            <LinearLayout
+                android:id="@+id/breedRow"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvDogName"
+                app:layout_constraintEnd_toStartOf="@id/ivHeart"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="8dp">
+
+                <TextView
+                    android:id="@+id/tvBreedPrimary"
+                    style="@style/TextAppearance.MaterialComponents.Body1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Chihuahua" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipMixed"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    app:chipStrokeColor="?attr/colorSecondary"
+                    app:chipStrokeWidth="1dp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+
+            <ImageView
+                android:id="@+id/ivHeart"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="@string/heart"
+                android:src="@drawable/emptyheart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tvDogName"
+            app:layout_constraintBottom_toBottomOf="@id/breedRow"
+            />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chipGroupCoreAttrs"
             android:layout_width="match_parent"
@@ -73,33 +94,28 @@
                 android:id="@+id/chipAge"
                 style="@style/Widget.MaterialComponents.Chip.Action"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/age" />
+                android:layout_height="wrap_content" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipGender"
                 style="@style/Widget.MaterialComponents.Chip.Action"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/gender" />
+                android:layout_height="wrap_content" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipSize"
                 style="@style/Widget.MaterialComponents.Chip.Action"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/size" />
+                android:layout_height="wrap_content" />
 
         </com.google.android.material.chip.ChipGroup>
 
-        <!-- 5) Divider -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="?attr/colorOnSurface"
             android:layout_marginTop="16dp" />
 
-        <!-- 6) Description section -->
         <TextView
             android:id="@+id/tvDescription"
             style="@style/TextAppearance.MaterialComponents.Body2"

@@ -21,7 +21,7 @@ fun downloadImage(context: Context, url: String) : String? {
     val extension = if (lastDot > 0 && lastDot < path.length - 1) {
         path.substring(lastDot)
     } else {
-        ".jpg" // Default
+        ".jpg"
     }
     val uniqueID = UUID.randomUUID().toString()
     val filename ="${uniqueID}${extension}"

@@ -1,7 +1,7 @@
 package hr.pet.model
 
 data class Dog(
-    val id: Long,
+    var id: Long,
     val breedPrimary: String,
     val breedMixed: Boolean,
     val age: String,
@@ -12,5 +12,6 @@ data class Dog(
     val description: String,
     val colorPrimary: String?,
     val colorSecondary: String?,
-    val picturePath: String
+    val picturePath: String,
+    var likeDog : Boolean
 )

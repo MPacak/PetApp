@@ -24,7 +24,8 @@ interface PetApi {
         //   @Header("Authorization") bearer: String,
         @Query("type") type: String = "dog",
         @Query("page") page: Int     = 1,
-        @Query("limit") limit: Int = 10
+        @Query("limit") limit: Int = 10,
+        @Query("organization") organization : Int? = null
     ): Call<PetAnimals>
 
     @GET("organizations")

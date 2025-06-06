@@ -19,4 +19,6 @@
     <string name="size">Size</string>
     <string name="coat">Coat</string>
     <string name="coat_and_color">Coat and color:</string>
+    <string name="heart">heart</string>
+    <string name="open_in_google_maps">Open in Google Maps</string>
 </resources>

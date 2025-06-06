@@ -23,11 +23,13 @@ private val CREATE_DOGS_TABLE = "create table $TABLE_DOGS( " +
         "${Dog::description.name} text, " +
         "${Dog::colorPrimary.name} text, " +
         "${Dog::colorSecondary.name} text, " +
-        "${Dog::picturePath.name} text not null " +
+        "${Dog::picturePath.name} text not null, " +
+        "${Dog::likeDog.name} integer not null " +
         ")"
 
 private val CREATE_ORG_TABLE = "create table $TABLE_ORGS( " +
         "${Organization::id.name} integer primary key autoincrement, " +
+        "${Organization::officialId.name} integer, " +
         "${Organization::name.name} text not null, " +
         "${Organization::email.name} text, " +
         "${Organization::phone.name} text, " +

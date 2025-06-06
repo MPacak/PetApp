@@ -28,21 +28,17 @@ class OrgPagerActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initPager()
-        //ima predvideno mejsto za back button i sad override da kad klikne ide na home, samo je treba uapliti
-        //jer zasada nezna da na klik ide nazad
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
     private fun initPager() {
         orgs = fetchOrganizations()
         orgPosition = intent.getIntExtra(ORG_POSITION, 0)
-//activity already implements lifecycleowner
         binding.orgViewPager.adapter = OrganizationPagerAdapter(this, orgs)
 
         binding.orgViewPager.currentItem = orgPosition
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        //rucno okida event koji je vec ugraden u njemu. Samo mu moram reci da je to to i da ode back
         onBackPressedDispatcher.onBackPressed()
         return super.onSupportNavigateUp()
     }

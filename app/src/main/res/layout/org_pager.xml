@@ -13,7 +13,6 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- 1) Header image -->
         <ImageView
             android:id="@+id/ivOrgPhoto"
             android:layout_width="match_parent"
@@ -22,7 +21,6 @@
             android:contentDescription="@string/org_photo"
             android:background="@color/grey_200" />
 
-        <!-- 2) Organization name -->
         <TextView
             android:id="@+id/tvOrgName"
             style="@style/TextAppearance.MaterialComponents.Headline5"
@@ -30,8 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp" />
 
-        <!-- 3) Contact info row(s) -->
-        <!-- We can use a CardView or simple LinearLayouts. Here’s a simple vertical grouping: -->
+
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -45,7 +42,6 @@
                 android:orientation="vertical"
                 android:padding="12dp">
 
-                <!-- Email (clickable TextView) -->
                 <TextView
                     android:id="@+id/tvOrgEmail"
                     style="@style/TextAppearance.MaterialComponents.Body1"
@@ -56,7 +52,7 @@
                     android:visibility="gone"
                     app:drawableStartCompat="@mipmap/email" />
 
-                <!-- Phone (clickable TextView) -->
+
                 <TextView
                     android:id="@+id/tvOrgPhone"
                     style="@style/TextAppearance.MaterialComponents.Body1"
@@ -70,7 +66,6 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- 4) Address -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -94,8 +89,6 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- 5) Embedded Google Map -->
-        <!-- We’ll use a MapView with fixed height inside the ScrollView -->
         <!--  <FrameLayout
               android:id="@+id/mapContainer"
               android:layout_width="match_parent"
@@ -113,14 +106,13 @@
               android:layout_height="200dp"
               android:layout_marginTop="12dp" />
 
-          <!-- 6) “Open in Google Maps” button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnOpenMaps"
             style="@style/Widget.MaterialComponents.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="Open in Google Maps"
+            android:text="@string/open_in_google_maps"
             android:visibility="gone" />
     </LinearLayout>
 </ScrollView>
