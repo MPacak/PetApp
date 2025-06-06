@@ -29,8 +29,9 @@ class DogPagerAdapter(
         private val chipSize          = dogView.findViewById<Chip>(R.id.chipSize)
         private val chipCoat          = dogView.findViewById<Chip>(R.id.chipCoat)
         private val tvDescription     = dogView.findViewById<TextView>(R.id.tvDescription)
-        private val tvColorPrimary    = dogView.findViewById<TextView>(R.id.viewColorPrimary)
-        private val tvColorSecondary  = dogView.findViewById<TextView>(R.id.viewColorSecondary)
+        private val chipColorPrimary  = dogView.findViewById<Chip>(R.id.chipColorPrimary)
+        private val chipColorSecondary= dogView.findViewById<Chip>(R.id.chipColorSecondary)
+
         fun bind(dog: Dog) {
             tvDogName.text      = dog.name
             tvBreedPrimary.text = dog.breedPrimary
@@ -45,23 +46,28 @@ class DogPagerAdapter(
             chipAge.text    = dog.age
             chipGender.text = dog.gender
             chipSize.text   = dog.size
-            chipCoat.text   = dog.coat
             tvDescription.text = dog.description
 
             // Show raw colorPrimary string if present
-            if (!dog.colorPrimary.isNullOrBlank()) {
-                tvColorPrimary.visibility = View.VISIBLE
-                tvColorPrimary.text       = dog.colorPrimary
+            if (dog.coat.isNotBlank()) {
+                chipCoat.visibility = View.VISIBLE
+                chipCoat.text = dog.coat
             } else {
-                tvColorPrimary.visibility = View.GONE
+                chipCoat.visibility = View.GONE
             }
 
-            // Show raw colorSecondary string if present
-            if (!dog.colorSecondary.isNullOrBlank()) {
-                tvColorSecondary.visibility = View.VISIBLE
-                tvColorSecondary.text       = dog.colorSecondary
+            if (!dog.colorPrimary.isNullOrBlank()) {
+                chipColorPrimary.visibility = View.VISIBLE
+                chipColorPrimary.text       = dog.colorPrimary
             } else {
-                tvColorSecondary.visibility = View.GONE
+                chipColorPrimary.visibility = View.GONE
+            }
+
+            if (!dog.colorSecondary.isNullOrBlank()) {
+                chipColorSecondary.visibility = View.VISIBLE
+                chipColorSecondary.text       = dog.colorSecondary
+            } else {
+                chipColorSecondary.visibility = View.GONE
             }
             Picasso.get()
                 .load(File(dog.picturePath))

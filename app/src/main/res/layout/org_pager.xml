@@ -96,19 +96,24 @@
 
         <!-- 5) Embedded Google Map -->
         <!-- We’ll use a MapView with fixed height inside the ScrollView -->
-        <FrameLayout
-            android:id="@+id/mapContainer"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_marginTop="12dp">
+        <!--  <FrameLayout
+              android:id="@+id/mapContainer"
+              android:layout_width="match_parent"
+              android:layout_height="200dp"
+              android:layout_marginTop="12dp">
 
-            <com.google.android.gms.maps.MapView
-                android:id="@+id/mapView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </FrameLayout>
+              <com.google.android.gms.maps.MapView
+                  android:id="@+id/mapView"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent" />
+          </FrameLayout>-->
+          <FrameLayout
+              android:id="@+id/mapContainer"
+              android:layout_width="match_parent"
+              android:layout_height="200dp"
+              android:layout_marginTop="12dp" />
 
-        <!-- 6) “Open in Google Maps” button -->
+          <!-- 6) “Open in Google Maps” button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnOpenMaps"
             style="@style/Widget.MaterialComponents.Button"

@@ -56,12 +56,12 @@
                 android:layout_marginStart="8dp"
                 app:chipStrokeColor="?attr/colorSecondary"
                 app:chipStrokeWidth="1dp"
-                android:visibility="gone" />  <!-- start GONE if not mixed -->
+                android:visibility="gone" />
         </LinearLayout>
 
         <!-- 4) Row of small “attribute chips”: age, gender, size, coat -->
         <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipGroupAttrs"
+            android:id="@+id/chipGroupCoreAttrs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
@@ -74,28 +74,21 @@
                 style="@style/Widget.MaterialComponents.Chip.Action"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Age" />
+                android:text="@string/age" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipGender"
                 style="@style/Widget.MaterialComponents.Chip.Action"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Gender" />
+                android:text="@string/gender" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipSize"
                 style="@style/Widget.MaterialComponents.Chip.Action"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Size" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipCoat"
-                style="@style/Widget.MaterialComponents.Chip.Action"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Coat" />
+                android:text="@string/size" />
 
         </com.google.android.material.chip.ChipGroup>
 
@@ -113,37 +106,45 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Description goes here..."
             android:lineSpacingExtra="4dp" />
-
-        <!-- 7) Color swatches (if available) -->
-        <LinearLayout
-            android:id="@+id/colorSwatchesRow"
+        <TextView
+            android:id="@+id/tvCoatColor"
+            style="@style/TextAppearance.MaterialComponents.Body2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="24dp"
-            android:gravity="center_vertical">
+            android:layout_marginTop="16dp"
+            android:text="@string/coat_and_color"/>
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupCoatColors"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:singleLine="true"
+            app:chipSpacing="8dp"
+            android:rowCount="1">
 
-            <!-- Primary color circle  android:background="@drawable/circle_shape"-->
-            <TextView
-                android:id="@+id/viewColorPrimary"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginEnd="16dp"
 
-                android:visibility="gone" />  <!-- gone by default if null -->
-
-            <!-- Secondary color circle  android:background="@drawable/circle_shape" -->
-            <TextView
-                android:id="@+id/viewColorSecondary"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginEnd="16dp"
-
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipCoat"
+                style="@style/Widget.MaterialComponents.Chip.Action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:visibility="gone" />
 
-        </LinearLayout>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipColorPrimary"
+                style="@style/Widget.MaterialComponents.Chip.Action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
 
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipColorSecondary"
+                style="@style/Widget.MaterialComponents.Chip.Action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+        </com.google.android.material.chip.ChipGroup>
     </LinearLayout>
 </ScrollView>

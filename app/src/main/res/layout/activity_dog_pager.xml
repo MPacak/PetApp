@@ -5,6 +5,7 @@
     android:id="@+id/dogViewPager"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".DogPagerActivity">
 
 </androidx.viewpager2.widget.ViewPager2>

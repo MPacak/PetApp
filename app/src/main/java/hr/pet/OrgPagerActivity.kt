@@ -36,7 +36,7 @@ class OrgPagerActivity : AppCompatActivity() {
         orgs = fetchOrganizations()
         orgPosition = intent.getIntExtra(ORG_POSITION, 0)
 //activity already implements lifecycleowner
-        binding.orgViewPager.adapter = OrganizationPagerAdapter(this, orgs, this)
+        binding.orgViewPager.adapter = OrganizationPagerAdapter(this, orgs)
 
         binding.orgViewPager.currentItem = orgPosition
     }
@@ -46,18 +46,5 @@ class OrgPagerActivity : AppCompatActivity() {
         onBackPressedDispatcher.onBackPressed()
         return super.onSupportNavigateUp()
     }
-    override fun onLowMemory() {
-        super.onLowMemory()
 
-        // ViewPager2 internally hosts a RecyclerView as its first child.
-        // We grab that RecyclerView, iterate over its ViewHolders, and call mapView.onLowMemory().
-        (binding.orgViewPager.getChildAt(0) as? RecyclerView)?.let { rv ->
-            for (i in 0 until rv.childCount) {
-                val holder = rv.findViewHolderForAdapterPosition(i)
-                if (holder is OrganizationPagerAdapter.ViewHolder) {
-                    holder.mapView.onLowMemory()
-                }
-            }
-        }
-    }
 }

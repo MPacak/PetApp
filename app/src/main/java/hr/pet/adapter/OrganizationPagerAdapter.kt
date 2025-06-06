@@ -10,18 +10,16 @@ import android.net.Uri
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.LifecycleOwner
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import hr.pet.model.Organization
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.button.MaterialButton
@@ -33,36 +31,42 @@ import java.io.IOException
 import java.util.Locale
 import java.util.concurrent.Executors
 
-
-class OrganizationPagerAdapter (
-    private val context: Context,
-    private val organizations: List<Organization>,
-    private val lifecycleOwner: LifecycleOwner  // we’ll use this to observe lifecycles if needed
+class OrganizationPagerAdapter(
+    private val context: FragmentActivity,
+    private val organizations: List<Organization>
 ) : RecyclerView.Adapter<OrganizationPagerAdapter.ViewHolder>() {
 
     inner class ViewHolder(orgView: View) : RecyclerView.ViewHolder(orgView) {
-        // 1) Basic data fields
-        private val ivOrgPhoto = orgView.findViewById<ImageView>(R.id.ivOrgPhoto)
-        private val tvOrgName = orgView.findViewById<TextView>(R.id.tvOrgName)
-        private val tvOrgEmail = orgView.findViewById<TextView>(R.id.tvOrgEmail)
-        private val tvOrgPhone = orgView.findViewById<TextView>(R.id.tvOrgPhone)
-        private val tvOrgAddress = orgView.findViewById<TextView>(R.id.tvOrgAddress)
-        val mapView = orgView.findViewById<MapView>(R.id.mapView)
-        private val btnOpenMaps = orgView.findViewById<MaterialButton>(R.id.btnOpenMaps)
+        // 1) Your other views
+        val ivOrgPhoto   = orgView.findViewById<ImageView>(R.id.ivOrgPhoto)
+        val tvOrgName    = orgView.findViewById<TextView>(R.id.tvOrgName)
+        val tvOrgEmail   = orgView.findViewById<TextView>(R.id.tvOrgEmail)
+        val tvOrgPhone   = orgView.findViewById<TextView>(R.id.tvOrgPhone)
+        val tvOrgAddress = orgView.findViewById<TextView>(R.id.tvOrgAddress)
+        val mapContainer = orgView.findViewById<FrameLayout>(R.id.mapContainer)
+        val btnOpenMaps  = orgView.findViewById<MaterialButton>(R.id.btnOpenMaps)
 
-        // We’ll keep a GoogleMap reference once the MapView is ready
-        private var googleMap: GoogleMap? = null
+        // 2) We keep a reference to GoogleMap so we can drop a marker once ready
+        var googleMap: GoogleMap? = null
 
-        // Bind data into all fields
-        fun bind(org: Organization) {
+        // 3) If geocoding finishes before the map is “ready,” stash lat/lng here
+        var pendingLatLng: LatLng? = null
+        var pendingTitle: String? = null
+
+        // 4) We remember the “bind‐time” data so we can attach the fragment later in onViewAttachedToWindow
+        var bindPosition: Int = -1
+        var bindAddress: String = ""
+        var bindTitle: String = ""
+
+        fun bind(org: Organization, position: Int) {
+            // A) Bind your image/text/email/phone/address exactly as before
             Picasso.get()
                 .load(File(org.photoPath))
-                .error(R.drawable.nopicture)   // your fallback drawable
+                .error(R.drawable.nopicture)
                 .transform(RoundedCornersTransformation(50, 5))
                 .into(ivOrgPhoto)
 
             tvOrgName.text = org.name
-
             if (!org.email.isNullOrBlank()) {
                 tvOrgEmail.visibility = View.VISIBLE
                 tvOrgEmail.text = org.email
@@ -70,173 +74,161 @@ class OrganizationPagerAdapter (
                 tvOrgEmail.visibility = View.GONE
             }
 
-            // ne treba persmission jer samo otvara phone i onda korisnik sam odlucuje hoce li zvati ili ne
-            //kako imam to za email mozda da za ovo dodam permissions pa da zovem odmah direktno
             if (!org.phone.isNullOrBlank()) {
                 tvOrgPhone.visibility = View.VISIBLE
                 tvOrgPhone.text = org.phone
-                //ovo actually radi android sam - skenira za broj telefona parsira i poziva intent
-//                tvOrgPhone.setOnClickListener {
-//                    val dialIntent = Intent(Intent.ACTION_DIAL).apply {
-//                        data = Uri.parse("tel:${org.phone}")
-//                    }
-//                    context.startActivity(dialIntent)
-//                }
             } else {
                 tvOrgPhone.visibility = View.GONE
             }
 
             val fullAddress = buildFullAddress(org)
-
             if (fullAddress.isNotBlank()) {
                 tvOrgAddress.visibility = View.VISIBLE
                 tvOrgAddress.text = fullAddress
+                btnOpenMaps.visibility = View.VISIBLE
+                btnOpenMaps.setOnClickListener { openInGoogleMaps(fullAddress) }
             } else {
                 tvOrgAddress.visibility = View.GONE
-            }
-
-
-            initMapView(fullAddress, org.name)
-
-            // 7. “Open in Google Maps” button
-            if (fullAddress.isNotBlank()) {
-                btnOpenMaps.visibility = View.VISIBLE
-                btnOpenMaps.setOnClickListener {
-                    openInGoogleMaps(fullAddress)
-                }
-            } else {
                 btnOpenMaps.visibility = View.GONE
             }
+
+            // B) Record the data needed for “attaching” in onViewAttachedToWindow
+            bindPosition = position
+            bindAddress = fullAddress
+            bindTitle = org.name
+
+            // IMPORTANT: Do NOT perform fragment transactions here anymore!
+            // We will do them in onViewAttachedToWindow, where mapContainer is guaranteed to exist.
         }
 
-        /** Build a single-line “street, state postcode, country” string (skipping nulls) */
-        private fun buildFullAddress(org: Organization): String {
-            val parts = mutableListOf<String>()
-            org.address?.takeIf { it.isNotBlank() }?.let { parts.add(it) }
-            // state + postcode
-
-            parts.add(org.city)
-            val stateZip = listOf(org.state, org.postcode).joinToString(" ").trim()
-            if (stateZip.isNotBlank()) parts.add(stateZip)
-            parts.add(org.country)
-            return parts.joinToString(", ")
+        /** Called when the ViewHolder’s view is attached to the window hierarchy. */
+        fun onViewAttached() {
+            // If bindPosition < 0, it means bind() hasn’t been called yet, so skip.
+            if (bindPosition < 0) return
+            Log.w("OrgPagerAdapter", "I am going to start the fragment again from on view attached")
+            initOrAttachMapFragment(bindPosition, bindAddress, bindTitle)
         }
 
-        /** Initialize MapView, geocode the `fullAddress`, and drop a marker */
-        private fun initMapView(fullAddress: String, name:String) {
-            // 1) MapView’s lifecycle must be forwarded manually
-            mapView.onCreate(null)  // if you want to restore state, pass savedInstanceState
-            mapView.getMapAsync { map ->
-                googleMap = map
+        private fun initOrAttachMapFragment(position: Int, address: String, title: String) {
+            val fragmentTag = "orgMapFragment_$position"
+            val fm = context.supportFragmentManager
+            val existingFrag = fm.findFragmentByTag(fragmentTag) as? SupportMapFragment
 
-                // Center map on a default position until geocode finishes
-                val defaultLatLng = LatLng(0.0, 0.0)
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLatLng, 2f))
+            if (existingFrag != null) {
+                Log.d("OrgPagerAdapter", "Re-using existing fragment for tag=$fragmentTag")
 
-                // 2) Geocode the address (synchronously or asynchronously)
-                //    For simplicity, use Android’s Geocoder (requires INTERNET permission).
-                val geocoder = Geocoder(context, Locale.getDefault())
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    Log.d("OrgPagerAdapter", "Geocoding first")
-                    geocoder.getFromLocationName(
-                        fullAddress,
-                        /* maxResults = */ 1,
-                        ContextCompat.getMainExecutor(context),
-                        /* listener = */ object : Geocoder.GeocodeListener{
-                            override fun onGeocode(addresses: MutableList<Address>) {
-                                if (addresses.isNotEmpty()) {
-                                    val addr = addresses[0]
-                                    Log.d("OrgPagerAdapter", "Geocoding first: '$addr'")
-                                    val latLng = LatLng(addr.latitude, addr.longitude)
+                // Replace (re-parent) the existing fragment into the current mapContainer
+                fm.beginTransaction()
+                    .replace(mapContainer.id, existingFrag, fragmentTag)
+                    .commitAllowingStateLoss()
 
-                                    map.clear()
-                                    map.addMarker(
-                                        MarkerOptions()
-                                            .position(latLng)
-                                            .title(name)
-                                    )
-                                    map.animateCamera(
-                                        CameraUpdateFactory.newLatLngZoom(latLng, 14f)
-                                    )
-                                }
-                                // else: leave the default camera alone
-                            }
-                        }
-                    )
+                existingFrag.getMapAsync { map ->
+                    Log.d("OrgPagerAdapter", ">> onMapReady() for existing tag=$fragmentTag")
+                    googleMap = map
+                    pendingLatLng?.let { latlng ->
+                        dropMarker(latlng, pendingTitle ?: "")
+                        pendingLatLng = null
+                        pendingTitle = null
+                    }
                 }
-                // 5) Fallback for older Android versions: do geocoding on a background thread
-                else {
-                    Log.d("OrgPagerAdapter", "Geocoding second")
-                    @Suppress("DEPRECATION")
-                    Executors.newSingleThreadExecutor().execute {
-                        val addresses: List<Address>? = try {
-                            geocoder.getFromLocationName(fullAddress, /* maxResults */ 1)
-                        } catch (e: IOException) {
-                            null
-                        }
-                        Log.d("OrgPagerAdapter", "Fallback geocoder result size = ${addresses?.size ?: 0} for '$fullAddress'")
 
-                        if (!addresses.isNullOrEmpty()) {
+                geocodeAddress(address, title)
+
+            } else {
+                Log.d("OrgPagerAdapter", "Creating new fragment for tag=$fragmentTag")
+                val newFrag = SupportMapFragment.newInstance()
+                fm.beginTransaction()
+                    .add(mapContainer.id, newFrag, fragmentTag)
+                    .commitAllowingStateLoss()
+
+                newFrag.getMapAsync { map ->
+                    Log.d("OrgPagerAdapter", ">> onMapReady() for new tag=$fragmentTag")
+                    googleMap = map
+                    geocodeAddress(address, title)
+                }
+            }
+        }
+
+        private fun geocodeAddress(fullAddress: String, title: String) {
+            if (fullAddress.isBlank()) return
+
+            val geocoder = Geocoder(context, Locale.getDefault())
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                geocoder.getFromLocationName(fullAddress, 1, object : Geocoder.GeocodeListener {
+                    override fun onGeocode(addresses: MutableList<Address>) {
+                        if (addresses.isNotEmpty()) {
                             val addr = addresses[0]
-                            Log.d("OrgPagerAdapter", "Geocoding second: '$addr'")
-                            val latLng = LatLng(addr.latitude, addr.longitude)
-                            Log.d("OrgPagerAdapter", "Fallback geocoder first result → ${addr.latitude},${addr.longitude}")
-                            // Switch back to the main thread to update the map UI
+                            val latlng = LatLng(addr.latitude, addr.longitude)
                             (context as Activity).runOnUiThread {
-                                map.clear()
-                                map.addMarker(
-                                    MarkerOptions()
-                                        .position(latLng)
-                                        .title(name)
-                                )
-                                map.animateCamera(
-                                    CameraUpdateFactory.newLatLngZoom(latLng, 14f)
-                                )
+                                if (googleMap != null) {
+                                    dropMarker(latlng, title)
+                                } else {
+                                    pendingLatLng = latlng
+                                    pendingTitle = title
+                                }
                             }
-                        }else {
-                            // NEW: This case happens when geocoder.getFromLocationName(...) returned nothing
-                            Log.w("OrgPagerAdapter", "Fallback geocoder returned NO results for '$fullAddress'")
-                            // You could optionally move the camera to some default zoom here, or leave it at (0,0)
+                        } else {
+                            Log.w("OrgPagerAdapter", "No geocoding results for '$fullAddress'")
                         }
+                    }
+
+                    override fun onError(errorMessage: String?) {
+                        Log.e("OrgPagerAdapter", "Geocoding failed: $errorMessage")
+                    }
+                })
+            } else {
+                Executors.newSingleThreadExecutor().execute {
+                    val list = try {
+                        geocoder.getFromLocationName(fullAddress, 1)
+                    } catch (e: IOException) {
+                        null
+                    }
+                    if (!list.isNullOrEmpty()) {
+                        val addr = list[0]
+                        val latlng = LatLng(addr.latitude, addr.longitude)
+                        (context as Activity).runOnUiThread {
+                            if (googleMap != null) {
+                                dropMarker(latlng, title)
+                            } else {
+                                pendingLatLng = latlng
+                                pendingTitle = title
+                            }
+                        }
+                    } else {
+                        Log.w("OrgPagerAdapter", "Deprecated geocoding returned no results for '$fullAddress'")
                     }
                 }
             }
         }
 
-        /** Call this from the Activity’s lifecycle methods:
-         *  onResume() → mapView.onResume()
-         *  onPause()  → mapView.onPause()
-         *  onDestroy()→ mapView.onDestroy()
-         *  etc. */
-        fun forwardLifecycle(event: Lifecycle.Event) {
-            when (event) {
-                Lifecycle.Event.ON_CREATE -> mapView.onCreate(null)
-                Lifecycle.Event.ON_START -> mapView.onStart()
-                Lifecycle.Event.ON_RESUME -> mapView.onResume()
-                Lifecycle.Event.ON_PAUSE -> mapView.onPause()
-                Lifecycle.Event.ON_STOP -> mapView.onStop()
-                Lifecycle.Event.ON_DESTROY -> {
-                    mapView.onDestroy()
-                    googleMap = null
-                }
-                else -> { /* no-op */}
+        private fun dropMarker(latlng: LatLng, title: String) {
+            googleMap?.let { map ->
+                map.clear()
+                map.addMarker(MarkerOptions().position(latlng).title(title))
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 14f))
             }
         }
 
-        /** Launch an Intent to open the full address in the Google Maps app */
         private fun openInGoogleMaps(address: String) {
-            // “geo:0,0?q=<address>” will let Android choose Maps and drop a pin
             val uri = Uri.parse("geo:0,0?q=" + Uri.encode(address))
-            val intent = Intent(Intent.ACTION_VIEW, uri).apply {
+            val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, uri).apply {
                 setPackage("com.google.android.apps.maps")
             }
-            // If Maps isn’t installed, fallback to browser
             if (intent.resolveActivity(context.packageManager) != null) {
                 context.startActivity(intent)
             } else {
-                // Try a generic ACTION_VIEW
-                context.startActivity(Intent(Intent.ACTION_VIEW, uri))
+                context.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, uri))
             }
+        }
+
+        private fun buildFullAddress(org: Organization): String {
+            val parts = mutableListOf<String>()
+            org.address?.takeIf { it.isNotBlank() }?.let { parts.add(it) }
+            parts.add(org.city)
+            val stateZip = listOf(org.state, org.postcode).joinToString(" ").trim()
+            if (stateZip.isNotBlank()) parts.add(stateZip)
+            parts.add(org.country)
+            return parts.joinToString(", ")
         }
     }
 
@@ -246,14 +238,19 @@ class OrganizationPagerAdapter (
         return ViewHolder(orgView)
     }
 
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(organizations[position], position)
+    }
+
     override fun getItemCount(): Int = organizations.size
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(organizations[position])
-        // Forward lifecycle events to the MapView inside the holder:
-        // We assume the Activity implements LifecycleOwner (it does by default).
-        lifecycleOwner.lifecycle.addObserver(LifecycleEventObserver { _, event ->
-            holder.forwardLifecycle(event)
-        })
+    /**
+     * This is the critical change: when a ViewHolder’s view is attached to the window,
+     * we know that `mapContainer` is now part of the Activity’s view hierarchy.
+     * Therefore we can safely do fragment transactions that target mapContainer.id.
+     */
+    override fun onViewAttachedToWindow(holder: ViewHolder) {
+        super.onViewAttachedToWindow(holder)
+        holder.onViewAttached()
     }
 }
