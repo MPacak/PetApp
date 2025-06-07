@@ -35,34 +35,62 @@
             app:cardElevation="4dp"
             app:cardCornerRadius="8dp"
             android:layout_marginTop="12dp">
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="12dp">
+            <LinearLayout
+                android:id="@+id/emailRow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="8dp">
+
+                <ImageView
+                    android:id="@+id/ivEmailIcon"
+                    android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@mipmap/email"
+                android:contentDescription="@string/email_icon" />
 
                 <TextView
                     android:id="@+id/tvOrgEmail"
                     style="@style/TextAppearance.MaterialComponents.Body1"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:autoLink="email"
-                    android:drawablePadding="8dp"
-                    android:visibility="gone"
-                    app:drawableStartCompat="@mipmap/email" />
+                    android:layout_marginStart="8dp"
+                    android:textColor="?attr/colorOnSurface"
+                    android:visibility="gone" />
+            </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/phoneRow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="8dp">
+
+                <ImageView
+                    android:id="@+id/ivPhoneIcon"
+                    android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@mipmap/phone"
+                android:contentDescription="@string/phone_icon" />
 
                 <TextView
                     android:id="@+id/tvOrgPhone"
                     style="@style/TextAppearance.MaterialComponents.Body1"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:autoLink="phone"
-                    android:drawablePadding="8dp"
-                    android:layout_marginTop="8dp"
-                    android:visibility="gone"
-                    app:drawableStartCompat="@mipmap/phone" />
+                    android:layout_marginStart="8dp"
+                    android:textColor="?attr/colorOnSurface"
+                    android:visibility="gone" />
+            </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 

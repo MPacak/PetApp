@@ -21,4 +21,6 @@
     <string name="coat_and_color">Coat and color:</string>
     <string name="heart">heart</string>
     <string name="open_in_google_maps">Open in Google Maps</string>
+    <string name="email_icon">email icon</string>
+    <string name="phone_icon">phone icon</string>
 </resources>
