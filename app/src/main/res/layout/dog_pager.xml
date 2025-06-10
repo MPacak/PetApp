@@ -54,8 +54,7 @@
                     android:id="@+id/tvBreedPrimary"
                     style="@style/TextAppearance.MaterialComponents.Body1"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Chihuahua" />
+                    android:layout_height="wrap_content" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipMixed"
@@ -94,19 +93,22 @@
                 android:id="@+id/chipAge"
                 style="@style/Widget.MaterialComponents.Chip.Action"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/age_of_dog"/>
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipGender"
                 style="@style/Widget.MaterialComponents.Chip.Action"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/gender_of_the_dog"/>
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipSize"
                 style="@style/Widget.MaterialComponents.Chip.Action"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/size_of_dog"/>
 
         </com.google.android.material.chip.ChipGroup>
 
@@ -128,8 +130,7 @@
             style="@style/TextAppearance.MaterialComponents.Body2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/coat_and_color"/>
+            android:layout_marginTop="16dp" />
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chipGroupCoatColors"
             android:layout_width="match_parent"

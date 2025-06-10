@@ -36,22 +36,22 @@ class OrganizationPagerAdapter(
 
     inner class ViewHolder(orgView: View) : RecyclerView.ViewHolder(orgView) {
 
-        val ivOrgPhoto   = orgView.findViewById<ImageView>(R.id.ivOrgPhoto)
-        val tvOrgName    = orgView.findViewById<TextView>(R.id.tvOrgName)
-        val tvOrgEmail   = orgView.findViewById<TextView>(R.id.tvOrgEmail)
-        val tvOrgPhone   = orgView.findViewById<TextView>(R.id.tvOrgPhone)
-        val tvOrgAddress = orgView.findViewById<TextView>(R.id.tvOrgAddress)
-        val mapContainer = orgView.findViewById<FrameLayout>(R.id.mapContainer)
-        val btnOpenMaps  = orgView.findViewById<MaterialButton>(R.id.btnOpenMaps)
+        private var ivOrgPhoto   = orgView.findViewById<ImageView>(R.id.ivOrgPhoto)
+        private var tvOrgName    = orgView.findViewById<TextView>(R.id.tvOrgName)
+        private var tvOrgEmail   = orgView.findViewById<TextView>(R.id.tvOrgEmail)
+        private var tvOrgPhone   = orgView.findViewById<TextView>(R.id.tvOrgPhone)
+        private var tvOrgAddress = orgView.findViewById<TextView>(R.id.tvOrgAddress)
+        private var mapContainer = orgView.findViewById<FrameLayout>(R.id.mapContainer)
+        private var btnOpenMaps  = orgView.findViewById<MaterialButton>(R.id.btnOpenMaps)
 
         var googleMap: GoogleMap? = null
 
         var pendingLatLng: LatLng? = null
         var pendingTitle: String? = null
 
-        var bindPosition: Int = -1
-        var bindAddress: String = ""
-        var bindTitle: String = ""
+        private var bindPosition: Int = -1
+        private var bindAddress: String = ""
+        private var bindTitle: String = ""
 
         fun bind(org: Organization, position: Int) {
 
@@ -171,6 +171,7 @@ class OrganizationPagerAdapter(
             } else {
                 Executors.newSingleThreadExecutor().execute {
                     val list = try {
+                        @Suppress("DEPRECATION")
                         geocoder.getFromLocationName(fullAddress, 1)
                     } catch (e: IOException) {
                         null
